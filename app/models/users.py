@@ -1,12 +1,12 @@
 import uuid
 from datetime import datetime
 from passlib.context import CryptContext
+from app.schemas.database import Base
 
 from sqlalchemy import Column, String, DateTime
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 
-Base = declarative_base()
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class Users(Base):
@@ -22,6 +22,6 @@ class Users(Base):
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, self.hashed_password)
+def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, self.password_hash)
 
