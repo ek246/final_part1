@@ -5,6 +5,36 @@ import time
 import pytest
 from playwright.sync_api import sync_playwright
 import requests
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+@pytest.fixture
+def db_session():
+    database_url = os.environ["TEST_DATABASE_URL"]
+
+    with pytest.MonkeyPatch.context() as m:
+        m.setenv("DATABASE_URL", database_url)
+
+        from app.database import Base
+        from app.models.users import Users
+    engine = create_engine(database_url)
+
+    try:
+        Base.metadata.create_all(engine)
+
+        with engine.connect() as connection:
+            transaction = connection.begin()
+            session = Session(bind=connection, join_transaction_mode= "create_savepoint",)
+            try:
+                yield session
+            finally:
+                session.close()
+                transaction.rollback()
+    finally:
+        engine.dispose()
+
+    
 
 @pytest.fixture(scope='session')
 def fastapi_server():
