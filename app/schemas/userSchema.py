@@ -1,6 +1,4 @@
 from datetime import datetime
-from uuid import UUID
-
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class UserCreate(BaseModel):
@@ -11,7 +9,7 @@ class UserCreate(BaseModel):
 class UserRead(BaseModel):
     model_config= ConfigDict(from_attributes=True)
 
-    id: UUID
+    id: int
     username: str
     email: EmailStr
     created_at: datetime
