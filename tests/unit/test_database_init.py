@@ -1,23 +1,22 @@
 from unittest.mock import patch
-from app import database_init
+from app import database, database_init
+import runpy
+from pathlib import Path
 
 
-def test_init_db():
+def test_database_init_as_script():
+    script_path = Path(database.__file__).with_name(
+        "database_init.py"
+    )
+
     with patch.object(
-        database_init.Base.metadata, "create_all"
+        database.Base.metadata, "create_all"
     ) as mock_create_all:
-        database_init.init_db()
-
-        mock_create_all.assert_called_once_with(
-            bind=database_init.engine
+        runpy.run_path(
+            str(script_path),
+            run_name="__main__",
         )
 
-def test_init_db():
-    with patch.object(
-        database_init.Base.metadata, "create_all"
-    ) as mock_create_all:
-        database_init.init_db()
-
         mock_create_all.assert_called_once_with(
-            bind=database_init.engine
+            bind=database.engine
         )
