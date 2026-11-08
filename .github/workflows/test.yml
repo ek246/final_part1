@@ -92,8 +92,8 @@ jobs:
         with:
           push: true
           tags: |
-            edocidss22/601_module9:latest
-            edocidss22/601_module9:${{ github.sha }}
+            edocidss22/final_part1:latest
+            edocidss22/final_part1:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=edocidss22/601_module9:cache
-          cache-to: type=inline,mode=max
+          cache-from: type=registry,ref=edocidss22/final_part1:cache
+          cache-to: type=registry,ref=edocidss22/final_part1:cache,mode=max
